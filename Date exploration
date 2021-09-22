@@ -37,6 +37,21 @@ GROUP BY
 ORDER BY 
    rideable_type
    
+## Create table to prepare for visualization about the ride length
+
+create table trip_data.table_2 as (
+    SELECT 
+rideable_type,
+started_date,
+DATE_DIFF(ended_at, started_at, second) AS ride_length,
+day_of_week,
+member_casual
+FROM 
+trip_data.total_trip_data 
+ORDER BY 
+started_date
+)
+   
 ## Create a table about annual member and casual rider
 
 Create table trip_data.table_member as (
