@@ -1,25 +1,26 @@
 ## Union two tables
 
-SELECT ride_id, rideable_type, started_at, started_date, started_time, ended_at, ended_date, ended_time, ride_length, day_of_week, start_station_name,
-CAST(start_station_id AS STRING) AS start_station_id,
-end_station_name,
-CAST(end_station_id AS STRING) AS end_station_id,
-start_lat, start_lng, end_lat, end_lng,member_casual
+SELECT 
+  ride_id, rideable_type, started_at, started_date, started_time, ended_at, ended_date, ended_time, ride_length, day_of_week, start_station_name,
+  CAST(start_station_id AS STRING) AS start_station_id,
+  end_station_name,
+  CAST(end_station_id AS STRING) AS end_station_id,
+  start_lat, start_lng, end_lat, end_lng,member_casual
 FROM 
-trip_data.Summary_trip_data_202009_11
+  trip_data.Summary_trip_data_202009_11
 UNION ALL 
 SELECT *
 FROM 
-trip_data.Summary_trip_data_202012_202108
+  trip_data.Summary_trip_data_202012_202108
 
 ## Explore data about the ride length group by rideable types and member types
 
 SELECT 
-member_casual,
-rideable_type,
-MAX(ride_length) AS MAX_ride_length,
-MIN(ride_length) AS MIN_ride_length,
-TIME_ADD(time "00:00:00", INTERVAL CAST(AVG(ride_second) AS INT64) SECOND) AS average_ride_length,
+  member_casual,
+  rideable_type,
+  MAX(ride_length) AS MAX_ride_length,
+  MIN(ride_length) AS MIN_ride_length,
+  TIME_ADD(time "00:00:00", INTERVAL CAST(AVG(ride_second) AS INT64) SECOND) AS average_ride_length,
 
 FROM 
   (SELECT 
@@ -40,50 +41,68 @@ ORDER BY
 ## Create table to prepare for visualization about the ride length
 
 create table trip_data.table_2 as (
-    SELECT 
-rideable_type,
-started_date,
-DATE_DIFF(ended_at, started_at, second) AS ride_length,
-day_of_week,
-member_casual
+SELECT 
+  rideable_type,
+  started_date,
+  DATE_DIFF(ended_at, started_at, second) AS ride_length,
+  day_of_week,
+  member_casual
 FROM 
-trip_data.total_trip_data 
+  trip_data.total_trip_data 
 ORDER BY 
-started_date
+  started_date
 )
-   
+
+## look at average ride length group by member type
+SELECT 
+  day_of_week,
+  member_casual,
+  AVG(DATE_DIFF(ended_at, started_at, second)) AS average_ride_length_second,
+  rideable_type,
+  started_date
+FROM 
+  trip_data.total_trip_data 
+GROUP BY 
+  day_of_week,
+  member_casual,
+  rideable_type,
+  started_date
+ORDER BY 
+  started_date
+
+
 ## Create a table about annual member and casual rider
 
 Create table trip_data.table_member as (
 SELECT 
-COUNT(member_casual) AS annual_member,
-rideable_type,
-started_date,
+  COUNT(member_casual) AS annual_member,
+  rideable_type,
+  started_date,
 FROM 
-trip_data.total_trip_data 
+  trip_data.total_trip_data 
 WHERE 
-member_casual = 'member'
+  member_casual = 'member'
 GROUP BY 
-rideable_type,
-started_date
+  rideable_type,
+  started_date
 ORDER BY 
-started_date
+  started_date
 )
 
 Create table trip_data.table_casual as (
 SELECT 
-COUNT(member_casual) AS annual_casual,
-rideable_type,
-started_date,
+  COUNT(member_casual) AS annual_casual,
+  rideable_type,
+  started_date,
 FROM 
-trip_data.total_trip_data 
+  trip_data.total_trip_data 
 WHERE 
-member_casual = 'casual'
+  member_casual = 'casual'
 GROUP BY 
-rideable_type,
-started_date
+  rideable_type,
+  started_date
 ORDER BY 
-started_date
+  started_date
 )
 
 ## Join table.member and table.casual
@@ -91,10 +110,10 @@ started_date
 SELECT 
 *
 FROM 
-trip_data.table_member
+  trip_data.table_member
 join 
-trip_data.table_casual
+  trip_data.table_casual
 ON
-table_casual.started_date = table_member.started_date
+  table_casual.started_date = table_member.started_date
 AND
-table_casual.rideable_type = table_member.rideable_type
+  table_casual.rideable_type = table_member.rideable_type
