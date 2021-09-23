@@ -54,6 +54,7 @@ ORDER BY
 )
 
 ## look at average ride length group by member type
+
 SELECT 
   day_of_week,
   member_casual,
@@ -70,6 +71,17 @@ GROUP BY
 ORDER BY 
   started_date
 
+## Count total number of trips sorted by day of week and member type
+
+SELECT 
+  day_of_week,
+  member_casual,
+  COUNT(day_of_week) AS total_number_of_trips
+FROM 
+  trip_data.total_trip_data 
+GROUP BY 
+  day_of_week,
+  member_casual
 
 ## Create a table about annual member and casual rider
 
