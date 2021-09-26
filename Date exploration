@@ -122,10 +122,10 @@ ORDER BY
 SELECT 
 *
 FROM 
-  trip_data.table_member
+  trip_data.table_member A
 join 
-  trip_data.table_casual
+  trip_data.table_casual B
 ON
-  table_casual.started_date = table_member.started_date
+  B.started_date = A.started_date
 AND
-  table_casual.rideable_type = table_member.rideable_type
+  B.rideable_type = A.rideable_type
