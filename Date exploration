@@ -117,15 +117,27 @@ ORDER BY
   started_date
 )
 
-## Join table.member and table.casual
+## Join table.member and table.casual with CTE and calculate percentage of annual members
 
+WITH mem_cas as 
+(
 SELECT 
-*
+mem.annual_member,
+cas.casual_rider,
+mem.started_date,
+mem.rideable_type
 FROM 
-  trip_data.table_member A
+trip_data.table_member mem
 join 
-  trip_data.table_casual B
+trip_data.table_casual cas
 ON
-  B.started_date = A.started_date
+cas.started_date = mem.started_date
 AND
-  B.rideable_type = A.rideable_type
+cas.rideable_type = mem.rideable_type
+)
+SELECT 
+started_date,
+rideable_type,
+annual_member/(annual_member+casual_rider)*100 AS percentage of annual membership
+FROM mem_cas
+ORDER BY 1,2
