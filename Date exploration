@@ -40,7 +40,7 @@ ORDER BY
    
 ## Create table to prepare for visualization about the ride length
 
-create table trip_data.table_2 as (
+create table if not exists trip_data.table_2 as (
 SELECT 
   rideable_type,
   started_date,
