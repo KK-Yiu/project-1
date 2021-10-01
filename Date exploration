@@ -1,4 +1,4 @@
-## Union two tables
+-- Union two tables
 
 SELECT 
   ride_id, rideable_type, started_at, started_date, started_time, ended_at, ended_date, ended_time, ride_length, day_of_week, start_station_name,
@@ -13,7 +13,7 @@ SELECT *
 FROM 
   trip_data.Summary_trip_data_202012_202108
 
-## Explore data about the ride length group by rideable types and member types
+-- Explore data about the ride length group by rideable types and member types
 
 SELECT 
   member_casual,
@@ -38,7 +38,7 @@ GROUP BY
 ORDER BY 
    rideable_type
    
-## Create table to prepare for visualization about the ride length
+-- Create table to prepare for visualization about the ride length
 
 create table if not exists trip_data.table_2 as (
 SELECT 
@@ -53,7 +53,7 @@ ORDER BY
   started_date
 )
 
-## look at average ride length group by member type
+-- look at average ride length group by member type
 
 SELECT 
   day_of_week,
@@ -71,7 +71,7 @@ GROUP BY
 ORDER BY 
   started_date
 
-## Count total number of trips sorted by day of week and member type
+-- Count total number of trips sorted by day of week and member type
 
 SELECT 
   day_of_week,
@@ -83,7 +83,7 @@ GROUP BY
   day_of_week,
   member_casual
 
-## Create a table about annual member and casual rider
+-- Create a table about annual member and casual rider
 
 Create table trip_data.table_member as (
 SELECT 
@@ -117,7 +117,7 @@ ORDER BY
   started_date
 )
 
-## Join table.member and table.casual with CTE and calculate percentage of annual members
+-- Join table.member and table.casual with CTE and calculate percentage of annual members
 
 WITH mem_cas as 
 (
