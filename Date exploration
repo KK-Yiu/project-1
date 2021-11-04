@@ -1,4 +1,4 @@
--- Union two tables
+-- Union all datasets from 202009 to 202108 by two tables created
 
 SELECT 
   ride_id, rideable_type, started_at, started_date, started_time, ended_at, ended_date, ended_time, ride_length, day_of_week, start_station_name,
